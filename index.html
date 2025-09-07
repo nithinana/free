@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free</title>
+    <style>
+        :root {
+            --primary-color: #4a90e2;
+            --background-color: #f0f2f5;
+            --card-background: #ffffff;
+            --text-color: #333;
+            --secondary-text-color: #777;
+            --border-color: #e0e0e0;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            margin: 0;
+            padding: 2rem;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        h1 {
+            text-align: center;
+            color: var(--primary-color);
+            margin-bottom: 2rem;
+            font-weight: 600;
+            font-size: 2.5rem;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .week-container {
+            background-color: var(--card-background);
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .week-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            color: var(--primary-color);
+            margin-top: 0;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .day-tabs {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            margin-top: 1.5rem;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .day-tab {
+            padding: 10px 15px;
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--secondary-text-color);
+            border-bottom: 3px solid transparent;
+            transition: color 0.3s ease, border-color 0.3s ease;
+        }
+
+        .day-tab:hover {
+            color: var(--primary-color);
+        }
+
+        .day-tab.active {
+            color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+        .day-content {
+            display: none;
+        }
+        
+        .day-content.active {
+            display: block;
+        }
+
+        .period {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0px;
+            margin-bottom: 10px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .period:last-child {
+            border-bottom: none;
+        }
+
+        .period-header {
+            font-weight: bold;
+            color: var(--primary-color);
+            flex: 0 0 40px;
+        }
+
+        .names-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .names-list li {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <h1>Free</h1>
+    <div class="container" id="timetable-container">
+    </div>
+
+    <script>
+        const timetableData = {
+          "Week1": {
+            "Monday": {
+              "P1": [],
+              "P2": [],
+              "P3": ["Rethika"],
+              "P4": [],
+              "P5": ["Rethika"],
+              "P6": ["Rethika"]
+            },
+            "Tuesday": {
+              "P1": [],
+              "P2": ["Rethika"],
+              "P3": [],
+              "P4": [],
+              "P5": [],
+              "P6": []
+            },
+            "Wednesday": {
+              "P1": [],
+              "P2": [],
+              "P3": [],
+              "P4": ["Rethika"],
+              "P5": ["Rethika"],
+              "P6": ["Rethika"]
+            },
+            "Thursday": {
+              "P1": ["Rethika"],
+              "P2": [],
+              "P3": [],
+              "P4": [],
+              "P5": [],
+              "P6": []
+            },
+            "Friday": {
+              "P1": [],
+              "P2": ["Rethika"],
+              "P3": [],
+              "P4": [],
+              "P5": ["Rethika"],
+              "P6": ["Rethika"]
+            }
+          },
+          "Week2": {
+            "Monday": {
+              "P1": [],
+              "P2": ["Rethika"],
+              "P3": ["Rethika"],
+              "P4": ["Rethika"],
+              "P5": [],
+              "P6": []
+            },
+            "Tuesday": {
+              "P1": [],
+              "P2": [],
+              "P3": [],
+              "P4": [],
+              "P5": ["Rethika"],
+              "P6": []
+            },
+            "Wednesday": {
+              "P1": ["Rethika"],
+              "P2": [],
+              "P3": [],
+              "P4": [],
+              "P5": ["Rethika"],
+              "P6": ["Rethika"]
+            },
+            "Thursday": {
+              "P1": [],
+              "P2": [],
+              "P3": [],
+              "P4": [],
+              "P5": ["Rethika"],
+              "P6": []
+            },
+            "Friday": {
+              "P1": [],
+              "P2": ["Rethika"],
+              "P3": ["Rethika"],
+              "P4": [],
+              "P5": [],
+              "P6": ["Rethika"]
+            }
+          }
+        };
+
+        const weeks = Object.keys(timetableData);
+        const periods = ['P1', 'P2', 'P3', 'P4', 'P5', 'P6'];
+        const container = document.getElementById('timetable-container');
+
+        // Function to set the active week and day
+        function setActive(weekToActivate, dayToActivate) {
+            // Find all tabs and content divs
+            const allTabs = document.querySelectorAll('.day-tab');
+            const allContent = document.querySelectorAll('.day-content');
+
+            // Deactivate all
+            allTabs.forEach(tab => tab.classList.remove('active'));
+            allContent.forEach(content => content.classList.remove('active'));
+
+            // Find and activate the correct tab and content for the specified week and day
+            const activeTab = document.querySelector(`.week-container[data-week="${weekToActivate}"] .day-tab[data-day="${dayToActivate}"]`);
+            const activeContent = document.getElementById(`${weekToActivate}-${dayToActivate}-content`);
+
+            if (activeTab && activeContent) {
+                activeTab.classList.add('active');
+                activeContent.classList.add('active');
+            } else {
+                // Fallback to Monday if the stored day/week doesn't exist
+                document.querySelector('.week-container[data-week="Week1"] .day-tab[data-day="Monday"]').classList.add('active');
+                document.getElementById('Week1-Monday-content').classList.add('active');
+            }
+        }
+        
+        function renderDay(dayData) {
+            let dayHtml = '';
+            periods.forEach(period => {
+                const names = dayData[period] || [];
+                // This is the updated section
+                const namesHtml = names.length > 0
+                    ? names.map(name => `<li>${name}</li>`).join('')
+                    : '';
+                
+                dayHtml += `
+                    <div class="period">
+                        <div class="period-header">${period}</div>
+                        <ul class="names-list">${namesHtml}</ul>
+                    </div>
+                `;
+            });
+            return dayHtml;
+        }
+
+        weeks.forEach(week => {
+            const weekDiv = document.createElement('div');
+            weekDiv.className = 'week-container';
+            weekDiv.dataset.week = week;
+            weekDiv.innerHTML = `<h2>${week}</h2>`;
+
+            const dayTabsContainer = document.createElement('div');
+            dayTabsContainer.className = 'day-tabs';
+
+            const dayContentContainer = document.createElement('div');
+            dayContentContainer.className = 'day-content-wrapper';
+
+            const days = Object.keys(timetableData[week]);
+            
+            days.forEach((day) => {
+                const dayTab = document.createElement('div');
+                dayTab.className = 'day-tab';
+                dayTab.textContent = day;
+                dayTab.dataset.day = day;
+
+                const dayContentDiv = document.createElement('div');
+                dayContentDiv.className = 'day-content';
+                dayContentDiv.id = `${week}-${day}-content`;
+                dayContentDiv.innerHTML = renderDay(timetableData[week][day]);
+                
+                dayTabsContainer.appendChild(dayTab);
+                dayContentContainer.appendChild(dayContentDiv);
+
+                dayTab.addEventListener('click', () => {
+                    setActive(week, day);
+                    localStorage.setItem('selectedTime', JSON.stringify({ week: week, day: day }));
+                });
+            });
+            
+            weekDiv.appendChild(dayTabsContainer);
+            weekDiv.appendChild(dayContentContainer);
+            container.appendChild(weekDiv);
+        });
+
+        const lastSelected = JSON.parse(localStorage.getItem('selectedTime'));
+        const defaultWeek = lastSelected ? lastSelected.week : 'Week1';
+        const defaultDay = lastSelected ? lastSelected.day : 'Monday';
+        setActive(defaultWeek, defaultDay);
+    </script>
+</body>
+</html>
