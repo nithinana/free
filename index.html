@@ -15,6 +15,16 @@
             --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
         }
 
+        body.dark-mode {
+            --primary-color: #74aaff;
+            --background-color: #121212;
+            --card-background: #1e1e1e;
+            --text-color: #e0e0e0;
+            --secondary-text-color: #a0a0a0;
+            --border-color: #333;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+        }
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
             margin: 0;
@@ -22,6 +32,7 @@
             background-color: var(--background-color);
             color: var(--text-color);
             line-height: 1.6;
+            transition: background-color 0.3s, color 0.3s;
         }
 
         h1 {
@@ -45,12 +56,16 @@
             padding: 2rem;
             border-radius: 12px;
             box-shadow: var(--shadow);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s;
         }
 
         .week-container:hover {
             transform: translateY(-5px);
             box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+        }
+
+        body.dark-mode .week-container:hover {
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.8);
         }
 
         h2 {
@@ -59,6 +74,7 @@
             margin-top: 0;
             padding-bottom: 1rem;
             border-bottom: 2px solid var(--border-color);
+            transition: color 0.3s;
         }
 
         .day-tabs {
@@ -68,6 +84,7 @@
             margin-top: 1.5rem;
             margin-bottom: 1rem;
             border-bottom: 1px solid var(--border-color);
+            transition: border-color 0.3s;
         }
 
         .day-tab {
@@ -103,6 +120,7 @@
             padding: 12px 0px;
             margin-bottom: 10px;
             border-bottom: 1px solid var(--border-color);
+            transition: border-color 0.3s;
         }
         
         .period:last-child {
@@ -113,6 +131,7 @@
             font-weight: bold;
             color: var(--primary-color);
             flex: 0 0 40px;
+            transition: color 0.3s;
         }
 
         .names-list {
@@ -131,10 +150,34 @@
             border-radius: 5px;
             font-size: 0.9rem;
             font-weight: 500;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .dark-mode-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--card-background);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: var(--shadow);
+            transition: background-color 0.3s, color 0.3s, border-color 0.3s;
         }
     </style>
 </head>
 <body>
+    <div class="dark-mode-toggle" id="darkModeToggle">
+        🌙
+    </div>
+
+    <h1>Free</h1>
     <div class="container" id="timetable-container">
     </div>
 
@@ -258,7 +301,6 @@
             let dayHtml = '';
             periods.forEach(period => {
                 const names = dayData[period] || [];
-                // This is the updated section
                 const namesHtml = names.length > 0
                     ? names.map(name => `<li>${name}</li>`).join('')
                     : '';
@@ -316,6 +358,32 @@
         const defaultWeek = lastSelected ? lastSelected.week : 'Week1';
         const defaultDay = lastSelected ? lastSelected.day : 'Monday';
         setActive(defaultWeek, defaultDay);
+
+        const toggleButton = document.getElementById('darkModeToggle');
+        const body = document.body;
+
+        function checkAndSetDarkMode() {
+            const isDarkMode = localStorage.getItem('darkMode') === 'true';
+            if (isDarkMode) {
+                body.classList.add('dark-mode');
+                toggleButton.textContent = '☀️';
+            } else {
+                body.classList.remove('dark-mode');
+                toggleButton.textContent = '🌙';
+            }
+        }
+        
+        toggleButton.addEventListener('click', () => {
+            const isDarkMode = body.classList.toggle('dark-mode');
+            localStorage.setItem('darkMode', isDarkMode);
+            if (isDarkMode) {
+                toggleButton.textContent = '☀️';
+            } else {
+                toggleButton.textContent = '🌙';
+            }
+        });
+
+        window.onload = checkAndSetDarkMode;
     </script>
 </body>
 </html>
