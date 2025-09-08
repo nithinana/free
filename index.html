@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>free periods</title>
+    <title>Timetable</title>
     <style>
         :root {
             --primary-color: #4a90e2;
@@ -49,6 +49,13 @@
             gap: 2rem;
             max-width: 800px;
             margin: 0 auto;
+        }
+
+        /* Added new styling for the timetable container */
+        #timetable-container {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
         }
         
         .main-tabs {
@@ -200,7 +207,7 @@
             transition: background-color 0.3s, color 0.3s, border-color 0.3s;
         }
         
-        /* New Compare Tab Styles */
+        /* Compare Tab Styles */
         .compare-section {
             background-color: var(--card-background);
             padding: 2rem;
@@ -291,6 +298,8 @@
     <div class="dark-mode-toggle" id="darkModeToggle">
         🌙
     </div>
+    
+    <h1>Timetable</h1>
 
     <div class="container">
         <div class="main-tabs">
@@ -378,7 +387,7 @@
               "P3": [],
               "P4": ["Chukwudi", "Aiden"],
               "P5": ["Rethika", "Nithinan", "Advait", "Luciano", "Aartheesh", "Prithvi", "Chukwudi", "Shafeeq", "Santhoash", "Aiden", "Alvin OA"],
-              "P6": ["Rethika", "Nithinan", "Advait", "Luciano", "Aartheesh", "Prithvi", "Chukwudi", "Shafeeq", "Santhoash", "Aiden", "Alvin OA"]
+              "P6": ["Rethika", "Nithinan", "Advait", "Luciano", "Aartheesh", "Chukwudi", "Shafeeq", "Santhoash", "Aiden", "Alvin OA"]
             },
             "Thursday": {
               "P1": ["Alvin OA"],
@@ -438,7 +447,10 @@
                 const weekDiv = document.createElement('div');
                 weekDiv.className = 'week-container';
                 weekDiv.dataset.week = week;
-                weekDiv.innerHTML = `<h2>${week}</h2>`;
+                
+                // Add a space to the week title
+                const weekTitle = week.replace('Week', 'Week ');
+                weekDiv.innerHTML = `<h2>${weekTitle}</h2>`;
 
                 const dayTabsContainer = document.createElement('div');
                 dayTabsContainer.className = 'day-tabs';
@@ -515,7 +527,6 @@
                 item.textContent = name;
                 item.dataset.name = name;
                 
-                // Add 'selected' class if the name is in the saved array
                 if (selectedNames.includes(name)) {
                     item.classList.add('selected');
                 }
@@ -534,7 +545,6 @@
                                     .map(item => item.dataset.name);
             resultsContainer.innerHTML = '';
             
-            // Save selected names to local storage
             localStorage.setItem('selectedNames', JSON.stringify(selectedNames));
             
             if (selectedNames.length < 2) {
@@ -547,7 +557,9 @@
             weeks.forEach(week => {
                 const resultsWeekDiv = document.createElement('div');
                 resultsWeekDiv.className = 'results-week';
-                resultsWeekDiv.innerHTML = `<h3 class="results-week-title">${week}</h3>`;
+                
+                const weekTitle = week.replace('Week', 'Week ');
+                resultsWeekDiv.innerHTML = `<h3 class="results-week-title">${weekTitle}</h3>`;
                 let weekHasResults = false;
                 
                 Object.keys(timetableData[week]).forEach(day => {
@@ -591,16 +603,13 @@
         document.addEventListener('DOMContentLoaded', () => {
             renderViewTab();
             
-            // Load selected names from local storage
             let selectedNames = JSON.parse(localStorage.getItem('selectedNames')) || [];
             renderChecklist(selectedNames);
 
-            // Re-run the comparison to display results if names are loaded from cache
             if (selectedNames.length > 0) {
                 compareTimetables();
             }
             
-            // Check for a saved main tab in local storage
             const lastActiveTab = localStorage.getItem('activeTab');
             if (lastActiveTab) {
                 switchMainTab(lastActiveTab);
@@ -608,7 +617,6 @@
                 switchMainTab('view');
             }
 
-            // Restore the last active day for the 'View' tab
             const lastSelected = JSON.parse(localStorage.getItem('selectedTime'));
             const defaultWeek = lastSelected ? lastSelected.week : 'Week1';
             const defaultDay = lastSelected ? lastSelected.day : 'Monday';
