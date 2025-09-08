@@ -13,6 +13,7 @@
             --secondary-text-color: #777;
             --border-color: #e0e0e0;
             --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --hover-color-light: #f0f0f0; /* Light grey for non-selected hover */
         }
 
         body.dark-mode {
@@ -23,6 +24,7 @@
             --secondary-text-color: #a0a0a0;
             --border-color: #333;
             --shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+            --hover-color-dark: #2a2a2a; /* Dark grey for non-selected hover */
         }
 
         body {
@@ -56,26 +58,80 @@
             flex-direction: column;
             gap: 2rem;
         }
-        
+
+        /* --- MODIFIED: Main Tabs Layout --- */
         .main-tabs {
+            position: relative; /* 1. Create a positioning context for the toggle */
             display: flex;
-            justify-content: center;
+            justify-content: center; /* This now centers only the View/Compare tabs */
+            align-items: center;
             margin-bottom: 2rem;
-            border-bottom: 2px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
+            gap: 25px;
         }
-        
+
         .main-tab {
-            padding: 15px 30px;
+            padding: 12px 5px;
+            margin-bottom: -1px; 
             cursor: pointer;
             font-weight: 600;
             color: var(--secondary-text-color);
+            background-color: transparent;
+            border: none;
             border-bottom: 3px solid transparent;
             transition: color 0.3s, border-color 0.3s;
+            text-decoration: none;
         }
-        
+
+        .main-tab:hover:not(.active) {
+            color: var(--primary-color);
+        }
+
         .main-tab.active {
             color: var(--primary-color);
-            border-color: var(--primary-color);
+            border-bottom-color: var(--primary-color);
+        }
+
+        /* --- MODIFIED: Dark Mode Toggle Layout --- */
+        .dark-mode-toggle {
+            position: absolute; /* 2. Position it relative to .main-tabs */
+            right: 0; /* 3. Align it to the right edge */
+            top: 50%; /* 4. Center it vertically */
+            transform: translateY(-50%); /* 5. Fine-tune vertical alignment */
+            cursor: pointer;
+            background-color: transparent;
+            border: none;
+            padding: 8px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.3s;
+        }
+        /* --- End of Modified Styles --- */
+        
+        .dark-mode-toggle:hover {
+            background-color: var(--hover-color-light);
+        }
+        
+        body.dark-mode .dark-mode-toggle:hover {
+            background-color: var(--hover-color-dark);
+        }
+        
+        .dark-mode-toggle .icon {
+            display: none;
+            width: 20px;
+            height: 20px;
+            stroke: var(--secondary-text-color);
+            transition: stroke 0.3s;
+        }
+        
+        .dark-mode-toggle:hover .icon {
+             stroke: var(--primary-color);
+        }
+
+        .dark-mode-toggle .icon.active {
+            display: block;
         }
 
         .main-tab-content {
@@ -114,30 +170,35 @@
 
         .day-tabs {
             display: flex;
-            justify-content: space-around;
+            justify-content: center;
             flex-wrap: wrap;
             margin-top: 1.5rem;
             margin-bottom: 1rem;
-            border-bottom: 1px solid var(--border-color);
-            transition: border-color 0.3s;
+            border-bottom: none;
+            gap: 8px;
         }
 
         .day-tab {
-            padding: 10px 15px;
+            padding: 8px 15px;
             cursor: pointer;
             font-weight: 600;
             color: var(--secondary-text-color);
-            border-bottom: 3px solid transparent;
-            transition: color 0.3s ease, border-color 0.3s ease;
+            background-color: var(--card-background);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, transform 0.2s ease-out;
         }
 
-        .day-tab:hover {
+        .day-tab:hover:not(.active) {
+            border-color: var(--primary-color);
             color: var(--primary-color);
         }
 
         .day-tab.active {
-            color: var(--primary-color);
+            color: white;
+            background-color: var(--primary-color);
             border-color: var(--primary-color);
+            transform: translateY(-2px);
         }
 
         .day-content {
@@ -168,12 +229,12 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            flex: 0 0 70px; /* Adjusted width to fit the time */
+            flex: 0 0 70px;
             transition: color 0.3s;
         }
 
         .period-time {
-            font-size: 0.75rem; /* Smaller font size for the time */
+            font-size: 0.75rem;
             font-weight: normal;
             color: var(--secondary-text-color);
             margin-top: 4px;
@@ -188,35 +249,22 @@
             gap: 8px;
         }
 
-        .names-list li {
+        #view-tab-content .names-list li {
             background-color: var(--primary-color);
             color: white;
             padding: 4px 10px;
             border-radius: 5px;
             font-size: 0.9rem;
             font-weight: 500;
-            transition: background-color 0.3s, color 0.3s;
+            border: 1px solid transparent;
+            transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+            cursor: default;
         }
 
-        .dark-mode-toggle {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: var(--card-background);
-            color: var(--text-color);
-            border: 1px solid var(--border-color);
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            box-shadow: var(--shadow);
-            transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+        #view-tab-content .names-list li:hover {
+            border-color: var(--primary-color);
         }
-        
-        /* Compare Tab Styles */
+
         .compare-section {
             background-color: var(--card-background);
             padding: 2rem;
@@ -241,15 +289,22 @@
             font-size: 0.9rem;
             cursor: pointer;
             border: 1px solid var(--border-color);
-            transition: background-color 0.3s, border-color 0.3s, color 0.3s;
-            background-color: var(--background-color);
+            background-color: var(--card-background);
             color: var(--text-color);
+            transition: background-color 0.3s, border-color 0.3s, color 0.3s, transform 0.2s ease-out;
+        }
+
+        .checklist-item:hover:not(.selected) {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+            transform: translateY(-2px);
         }
 
         .checklist-item.selected {
             background-color: var(--primary-color);
             color: white;
             border-color: var(--primary-color);
+            transform: translateY(-2px);
         }
 
         .results-container {
@@ -294,6 +349,7 @@
             border-radius: 5px;
             font-size: 0.9rem;
             font-weight: 500;
+            transition: background-color 0.3s, color 0.3s;
         }
         
         .empty-results {
@@ -302,7 +358,6 @@
             text-align: center;
         }
 
-        /* New CSS for the footer text */
         .footer-text {
             font-size: 0.8rem;
             text-align: center;
@@ -310,18 +365,69 @@
             color: var(--secondary-text-color);
             opacity: 0.7;
         }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+
+            h1 {
+                font-size: 2rem;
+                margin-bottom: 1.5rem;
+            }
+
+            .main-tab {
+                padding: 12px 5px;
+            }
+            
+            .day-tabs {
+                justify-content: center;
+                gap: 10px;
+            }
+
+            .week-container {
+                padding: 1.5rem;
+            }
+
+            .period {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            .period-header {
+                flex-direction: row;
+                gap: 10px;
+                flex: none;
+            }
+
+            .names-list {
+                justify-content: center;
+            }
+        }
     </style>
 </head>
 <body>
-    <div class="dark-mode-toggle" id="darkModeToggle">
-        🌙
-    </div>
-
-
     <div class="container">
         <div class="main-tabs">
             <div class="main-tab active" data-tab="view">View</div>
             <div class="main-tab" data-tab="compare">Compare</div>
+            <div class="dark-mode-toggle" id="darkModeToggle">
+                <svg id="moon-icon" class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                </svg>
+                <svg id="sun-icon" class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="5"></circle>
+                    <line x1="12" y1="1" x2="12" y2="3"></line>
+                    <line x1="12" y1="21" x2="12" y2="23"></line>
+                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                    <line x1="1" y1="12" x2="3" y2="12"></line>
+                    <line x1="21" y1="12" x2="23" y2="12"></line>
+                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                </svg>
+            </div>
         </div>
 
         <div id="view-tab-content" class="main-tab-content active">
@@ -366,7 +472,7 @@
               "P3": ["Nithinan", "Advait", "Luciano"],
               "P4": ["Rethika", "Nithinan", "Advait", "Luciano", "Aartheesh", "Prithvi", "Chukwudi", "Shafeeq", "Santhoash", "Aiden", "Alvin OA"],
               "P5": ["Rethika", "Nithinan", "Advait", "Luciano", "Aartheesh", "Prithvi", "Chukwudi", "Shafeeq", "Santhoash", "Aiden", "Alvin OA"],
-              "P6": ["Rethika", "Nithinan", "Advait", "Luciano", "Aartheesh", "Prithvi", "Chukwudi", "Shafeeq", "Santhoash", "Aiden", "Alvin OA"]
+              "P6": ["Rethika", "Nithinan", "Advait", "Luciano", "Aartheesh", "Chukwudi", "Shafeeq", "Santhoash", "Aiden", "Alvin OA"]
             },
             "Thursday": {
               "P1": ["Rethika", "Aartheesh", "Santhoash"],
@@ -429,7 +535,6 @@
           }
         };
         
-        // New object to hold the period times
         const periodTimes = {
             "P1": "9:00",
             "P2": "10:00",
@@ -450,7 +555,6 @@
         const timetableContainer = document.getElementById('timetable-container');
         const mainTabs = document.querySelectorAll('.main-tab');
         const mainTabContents = document.querySelectorAll('.main-tab-content');
-
         const weeks = Object.keys(timetableData);
         const periods = ['P1', 'P2', 'P3', 'P4', 'P5', 'P6'];
 
@@ -460,7 +564,7 @@
                 const names = dayData[period] || [];
                 const namesHtml = names.length > 0
                     ? names.map(name => `<li>${name}</li>`).join('')
-                    : '<li style="background-color: transparent; color: var(--secondary-text-color);">No one</li>';
+                    : '<li class="empty-name-slot">No one</li>';
                 
                 dayHtml += `
                     <div class="period">
@@ -481,16 +585,12 @@
                 const weekDiv = document.createElement('div');
                 weekDiv.className = 'week-container';
                 weekDiv.dataset.week = week;
-                
                 const weekTitle = week.replace('Week', 'Week ');
                 weekDiv.innerHTML = `<h2>${weekTitle}</h2>`;
-
                 const dayTabsContainer = document.createElement('div');
                 dayTabsContainer.className = 'day-tabs';
-
                 const dayContentContainer = document.createElement('div');
                 dayContentContainer.className = 'day-content-wrapper';
-
                 const days = Object.keys(timetableData[week]);
                 
                 days.forEach((day) => {
@@ -498,15 +598,12 @@
                     dayTab.className = 'day-tab';
                     dayTab.textContent = day;
                     dayTab.dataset.day = day;
-
                     const dayContentDiv = document.createElement('div');
                     dayContentDiv.className = 'day-content';
                     dayContentDiv.id = `${week}-${day}-content`;
                     dayContentDiv.innerHTML = renderDay(timetableData[week][day]);
-                    
                     dayTabsContainer.appendChild(dayTab);
                     dayContentContainer.appendChild(dayContentDiv);
-
                     dayTab.addEventListener('click', () => {
                         setActive(week, day);
                         localStorage.setItem('selectedTime', JSON.stringify({ week: week, day: day }));
@@ -522,13 +619,10 @@
         function setActive(weekToActivate, dayToActivate) {
             const allTabs = document.querySelectorAll('.week-container[data-week] .day-tab');
             const allContent = document.querySelectorAll('.week-container[data-week] .day-content');
-
             allTabs.forEach(tab => tab.classList.remove('active'));
             allContent.forEach(content => content.classList.remove('active'));
-
             const activeTab = document.querySelector(`.week-container[data-week="${weekToActivate}"] .day-tab[data-day="${dayToActivate}"]`);
             const activeContent = document.getElementById(`${weekToActivate}-${dayToActivate}-content`);
-
             if (activeTab && activeContent) {
                 activeTab.classList.add('active');
                 activeContent.classList.add('active');
@@ -541,12 +635,9 @@
         function switchMainTab(tabName) {
             mainTabs.forEach(tab => tab.classList.remove('active'));
             mainTabContents.forEach(content => content.classList.remove('active'));
-
             document.querySelector(`.main-tab[data-tab="${tabName}"]`).classList.add('active');
             document.getElementById(`${tabName}-tab-content`).classList.add('active');
-            
             localStorage.setItem('activeTab', tabName);
-            
             if (tabName === 'compare') {
                 compareTimetables();
             }
@@ -559,13 +650,10 @@
                 item.className = 'checklist-item';
                 item.textContent = name;
                 item.dataset.name = name;
-                
                 if (selectedNames.includes(name)) {
                     item.classList.add('selected');
                 }
-                
                 checklistContainer.appendChild(item);
-                
                 item.addEventListener('click', () => {
                     item.classList.toggle('selected');
                     compareTimetables();
@@ -577,57 +665,45 @@
             const selectedNames = Array.from(checklistContainer.querySelectorAll('.checklist-item.selected'))
                                     .map(item => item.dataset.name);
             resultsContainer.innerHTML = '';
-            
             localStorage.setItem('selectedNames', JSON.stringify(selectedNames));
-            
             if (selectedNames.length < 2) {
                 resultsContainer.innerHTML = `<p class="empty-results">Select at least two names to see common periods.</p>`;
                 return;
             }
-
             let foundCommonPeriods = false;
-            
             weeks.forEach(week => {
                 const resultsWeekDiv = document.createElement('div');
                 resultsWeekDiv.className = 'results-week';
-                
                 const weekTitle = week.replace('Week', 'Week ');
                 resultsWeekDiv.innerHTML = `<h3 class="results-week-title">${weekTitle}</h3>`;
                 let weekHasResults = false;
-                
                 Object.keys(timetableData[week]).forEach(day => {
                     const dayData = timetableData[week][day];
                     const commonPeriods = periods.filter(period => {
                         const namesInPeriod = dayData[period] || [];
                         return selectedNames.every(name => namesInPeriod.includes(name));
                     });
-
                     if (commonPeriods.length > 0) {
                         weekHasResults = true;
                         foundCommonPeriods = true;
-                        
                         const resultsDayDiv = document.createElement('div');
                         resultsDayDiv.className = 'results-day';
                         resultsDayDiv.innerHTML = `<div class="results-day-title">${day}:</div>`;
                         const resultsList = document.createElement('ul');
                         resultsList.className = 'results-list';
-                        
                         commonPeriods.forEach(period => {
                             const listItem = document.createElement('li');
                             listItem.textContent = period;
                             resultsList.appendChild(listItem);
                         });
-                        
                         resultsDayDiv.appendChild(resultsList);
                         resultsWeekDiv.appendChild(resultsDayDiv);
                     }
                 });
-                
                 if (weekHasResults) {
                     resultsContainer.appendChild(resultsWeekDiv);
                 }
             });
-            
             if (!foundCommonPeriods) {
                 resultsContainer.innerHTML = `<p class="empty-results">No common periods found for the selected names.</p>`;
             }
@@ -635,44 +711,43 @@
         
         document.addEventListener('DOMContentLoaded', () => {
             renderViewTab();
-            
             let selectedNames = JSON.parse(localStorage.getItem('selectedNames')) || [];
             renderChecklist(selectedNames);
-
             if (selectedNames.length > 0) {
                 compareTimetables();
             }
-            
             const lastActiveTab = localStorage.getItem('activeTab');
             if (lastActiveTab) {
                 switchMainTab(lastActiveTab);
             } else {
                 switchMainTab('view');
             }
-
             const lastSelected = JSON.parse(localStorage.getItem('selectedTime'));
             const defaultWeek = lastSelected ? lastSelected.week : 'Week1';
             const defaultDay = lastSelected ? lastSelected.day : 'Monday';
             setActive(defaultWeek, defaultDay);
-            
             mainTabs.forEach(tab => {
                 tab.addEventListener('click', () => {
-                    switchMainTab(tab.dataset.tab);
+                    if (tab.dataset.tab) {
+                        switchMainTab(tab.dataset.tab);
+                    }
                 });
             });
-
-            // Dark Mode Toggle
             const toggleButton = document.getElementById('darkModeToggle');
             const body = document.body;
+            const moonIcon = document.getElementById('moon-icon');
+            const sunIcon = document.getElementById('sun-icon');
 
             function checkAndSetDarkMode() {
                 const isDarkMode = localStorage.getItem('darkMode') === 'true';
                 if (isDarkMode) {
                     body.classList.add('dark-mode');
-                    toggleButton.textContent = '☀️';
+                    moonIcon.classList.remove('active');
+                    sunIcon.classList.add('active');
                 } else {
                     body.classList.remove('dark-mode');
-                    toggleButton.textContent = '🌙';
+                    moonIcon.classList.add('active');
+                    sunIcon.classList.remove('active');
                 }
             }
             
@@ -680,12 +755,13 @@
                 const isDarkMode = body.classList.toggle('dark-mode');
                 localStorage.setItem('darkMode', isDarkMode);
                 if (isDarkMode) {
-                    toggleButton.textContent = '☀️';
+                    moonIcon.classList.remove('active');
+                    sunIcon.classList.add('active');
                 } else {
-                    toggleButton.textContent = '🌙';
+                    moonIcon.classList.add('active');
+                    sunIcon.classList.remove('active');
                 }
             });
-
             checkAndSetDarkMode();
         });
     </script>
