@@ -59,11 +59,10 @@
             gap: 2rem;
         }
 
-        /* --- MODIFIED: Main Tabs Layout --- */
         .main-tabs {
-            position: relative; /* 1. Create a positioning context for the toggle */
+            position: relative; 
             display: flex;
-            justify-content: center; /* This now centers only the View/Compare tabs */
+            justify-content: center; 
             align-items: center;
             margin-bottom: 2rem;
             border-bottom: 1px solid var(--border-color);
@@ -92,12 +91,11 @@
             border-bottom-color: var(--primary-color);
         }
 
-        /* --- MODIFIED: Dark Mode Toggle Layout --- */
         .dark-mode-toggle {
-            position: absolute; /* 2. Position it relative to .main-tabs */
-            right: 0; /* 3. Align it to the right edge */
-            top: 50%; /* 4. Center it vertically */
-            transform: translateY(-50%); /* 5. Fine-tune vertical alignment */
+            position: absolute; 
+            right: 0; 
+            top: 50%; 
+            transform: translateY(-50%); 
             cursor: pointer;
             background-color: transparent;
             border: none;
@@ -108,7 +106,6 @@
             justify-content: center;
             transition: background-color 0.3s;
         }
-        /* --- End of Modified Styles --- */
         
         .dark-mode-toggle:hover {
             background-color: var(--hover-color-light);
@@ -264,6 +261,26 @@
         #view-tab-content .names-list li:hover {
             border-color: var(--primary-color);
         }
+
+        /* --- NEW: Style for empty day message --- */
+        .empty-day-message {
+            color: var(--secondary-text-color);
+            text-align: center;
+            font-style: italic;
+            padding: 2rem 0;
+        }
+        /* --- End of New Styles --- */
+
+        /* --- NEW: Style for empty name slot --- */
+        #view-tab-content .names-list li.empty-name-slot {
+            background-color: transparent;
+            color: var(--secondary-text-color);
+            border-color: transparent;
+            font-style: italic;
+            cursor: default;
+            box-shadow: none;
+        }
+        /* --- End of New Styles --- */
 
         .compare-section {
             background-color: var(--card-background);
@@ -558,7 +575,17 @@
         const weeks = Object.keys(timetableData);
         const periods = ['P1', 'P2', 'P3', 'P4', 'P5', 'P6'];
 
+        // --- MODIFIED: renderDay function ---
         function renderDay(dayData) {
+            // First, check if the entire day is empty by seeing if the total number of names is 0
+            const isDayEmpty = Object.values(dayData).flat().length === 0;
+
+            // If the day is empty, return the special message
+            if (isDayEmpty) {
+                return '<p class="empty-day-message">No one is free the whole day</p>';
+            }
+
+            // Otherwise, build the list of periods as before
             let dayHtml = '';
             periods.forEach(period => {
                 const names = dayData[period] || [];
@@ -578,6 +605,7 @@
             });
             return dayHtml;
         }
+        // --- End of Modified Function ---
 
         function renderViewTab() {
             timetableContainer.innerHTML = '';
@@ -585,12 +613,16 @@
                 const weekDiv = document.createElement('div');
                 weekDiv.className = 'week-container';
                 weekDiv.dataset.week = week;
+                
                 const weekTitle = week.replace('Week', 'Week ');
                 weekDiv.innerHTML = `<h2>${weekTitle}</h2>`;
+
                 const dayTabsContainer = document.createElement('div');
                 dayTabsContainer.className = 'day-tabs';
+
                 const dayContentContainer = document.createElement('div');
                 dayContentContainer.className = 'day-content-wrapper';
+
                 const days = Object.keys(timetableData[week]);
                 
                 days.forEach((day) => {
@@ -598,12 +630,15 @@
                     dayTab.className = 'day-tab';
                     dayTab.textContent = day;
                     dayTab.dataset.day = day;
+
                     const dayContentDiv = document.createElement('div');
                     dayContentDiv.className = 'day-content';
                     dayContentDiv.id = `${week}-${day}-content`;
                     dayContentDiv.innerHTML = renderDay(timetableData[week][day]);
+                    
                     dayTabsContainer.appendChild(dayTab);
                     dayContentContainer.appendChild(dayContentDiv);
+
                     dayTab.addEventListener('click', () => {
                         setActive(week, day);
                         localStorage.setItem('selectedTime', JSON.stringify({ week: week, day: day }));
@@ -619,14 +654,18 @@
         function setActive(weekToActivate, dayToActivate) {
             const allTabs = document.querySelectorAll('.week-container[data-week] .day-tab');
             const allContent = document.querySelectorAll('.week-container[data-week] .day-content');
+
             allTabs.forEach(tab => tab.classList.remove('active'));
             allContent.forEach(content => content.classList.remove('active'));
+
             const activeTab = document.querySelector(`.week-container[data-week="${weekToActivate}"] .day-tab[data-day="${dayToActivate}"]`);
             const activeContent = document.getElementById(`${weekToActivate}-${dayToActivate}-content`);
+
             if (activeTab && activeContent) {
                 activeTab.classList.add('active');
                 activeContent.classList.add('active');
             } else {
+                // Fallback to Monday if specific tab/content not found
                 document.querySelector('.week-container[data-week="Week1"] .day-tab[data-day="Monday"]').classList.add('active');
                 document.getElementById('Week1-Monday-content').classList.add('active');
             }
@@ -635,9 +674,12 @@
         function switchMainTab(tabName) {
             mainTabs.forEach(tab => tab.classList.remove('active'));
             mainTabContents.forEach(content => content.classList.remove('active'));
+
             document.querySelector(`.main-tab[data-tab="${tabName}"]`).classList.add('active');
             document.getElementById(`${tabName}-tab-content`).classList.add('active');
+            
             localStorage.setItem('activeTab', tabName);
+            
             if (tabName === 'compare') {
                 compareTimetables();
             }
@@ -650,10 +692,13 @@
                 item.className = 'checklist-item';
                 item.textContent = name;
                 item.dataset.name = name;
+                
                 if (selectedNames.includes(name)) {
                     item.classList.add('selected');
                 }
+                
                 checklistContainer.appendChild(item);
+                
                 item.addEventListener('click', () => {
                     item.classList.toggle('selected');
                     compareTimetables();
@@ -665,45 +710,57 @@
             const selectedNames = Array.from(checklistContainer.querySelectorAll('.checklist-item.selected'))
                                     .map(item => item.dataset.name);
             resultsContainer.innerHTML = '';
+            
             localStorage.setItem('selectedNames', JSON.stringify(selectedNames));
+            
             if (selectedNames.length < 2) {
                 resultsContainer.innerHTML = `<p class="empty-results">Select at least two names to see common periods.</p>`;
                 return;
             }
+
             let foundCommonPeriods = false;
+            
             weeks.forEach(week => {
                 const resultsWeekDiv = document.createElement('div');
                 resultsWeekDiv.className = 'results-week';
+                
                 const weekTitle = week.replace('Week', 'Week ');
                 resultsWeekDiv.innerHTML = `<h3 class="results-week-title">${weekTitle}</h3>`;
                 let weekHasResults = false;
+                
                 Object.keys(timetableData[week]).forEach(day => {
                     const dayData = timetableData[week][day];
                     const commonPeriods = periods.filter(period => {
                         const namesInPeriod = dayData[period] || [];
                         return selectedNames.every(name => namesInPeriod.includes(name));
                     });
+
                     if (commonPeriods.length > 0) {
                         weekHasResults = true;
                         foundCommonPeriods = true;
+                        
                         const resultsDayDiv = document.createElement('div');
                         resultsDayDiv.className = 'results-day';
                         resultsDayDiv.innerHTML = `<div class="results-day-title">${day}:</div>`;
                         const resultsList = document.createElement('ul');
                         resultsList.className = 'results-list';
+                        
                         commonPeriods.forEach(period => {
                             const listItem = document.createElement('li');
                             listItem.textContent = period;
                             resultsList.appendChild(listItem);
                         });
+                        
                         resultsDayDiv.appendChild(resultsList);
                         resultsWeekDiv.appendChild(resultsDayDiv);
                     }
                 });
+                
                 if (weekHasResults) {
                     resultsContainer.appendChild(resultsWeekDiv);
                 }
             });
+            
             if (!foundCommonPeriods) {
                 resultsContainer.innerHTML = `<p class="empty-results">No common periods found for the selected names.</p>`;
             }
@@ -711,21 +768,26 @@
         
         document.addEventListener('DOMContentLoaded', () => {
             renderViewTab();
+            
             let selectedNames = JSON.parse(localStorage.getItem('selectedNames')) || [];
             renderChecklist(selectedNames);
+
             if (selectedNames.length > 0) {
                 compareTimetables();
             }
+            
             const lastActiveTab = localStorage.getItem('activeTab');
             if (lastActiveTab) {
                 switchMainTab(lastActiveTab);
             } else {
                 switchMainTab('view');
             }
+
             const lastSelected = JSON.parse(localStorage.getItem('selectedTime'));
             const defaultWeek = lastSelected ? lastSelected.week : 'Week1';
             const defaultDay = lastSelected ? lastSelected.day : 'Monday';
             setActive(defaultWeek, defaultDay);
+            
             mainTabs.forEach(tab => {
                 tab.addEventListener('click', () => {
                     if (tab.dataset.tab) {
@@ -733,6 +795,8 @@
                     }
                 });
             });
+
+            // Dark Mode Toggle
             const toggleButton = document.getElementById('darkModeToggle');
             const body = document.body;
             const moonIcon = document.getElementById('moon-icon');
@@ -762,6 +826,7 @@
                     sunIcon.classList.remove('active');
                 }
             });
+
             checkAndSetDarkMode();
         });
     </script>
