@@ -51,7 +51,6 @@
             margin: 0 auto;
         }
 
-        /* Added new styling for the timetable container */
         #timetable-container {
             display: flex;
             flex-direction: column;
@@ -166,8 +165,18 @@
         .period-header {
             font-weight: bold;
             color: var(--primary-color);
-            flex: 0 0 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 0 0 70px; /* Adjusted width to fit the time */
             transition: color 0.3s;
+        }
+
+        .period-time {
+            font-size: 0.75rem; /* Smaller font size for the time */
+            font-weight: normal;
+            color: var(--secondary-text-color);
+            margin-top: 4px;
         }
 
         .names-list {
@@ -299,6 +308,7 @@
         🌙
     </div>
 
+
     <div class="container">
         <div class="main-tabs">
             <div class="main-tab active" data-tab="view">View</div>
@@ -406,6 +416,16 @@
           }
         };
         
+        // New object to hold the period times
+        const periodTimes = {
+            "P1": "9:00",
+            "P2": "10:00",
+            "P3": "11:20",
+            "P4": "12:20",
+            "P5": "13:55",
+            "P6": "15:10"
+        };
+        
         const allNames = [...new Set(Object.values(timetableData).flatMap(week => 
             Object.values(week).flatMap(day => 
                 Object.values(day).flatMap(names => names)
@@ -431,7 +451,10 @@
                 
                 dayHtml += `
                     <div class="period">
-                        <div class="period-header">${period}</div>
+                        <div class="period-header">
+                            ${period}
+                            <span class="period-time">${periodTimes[period]}</span>
+                        </div>
                         <ul class="names-list">${namesHtml}</ul>
                     </div>
                 `;
@@ -446,7 +469,6 @@
                 weekDiv.className = 'week-container';
                 weekDiv.dataset.week = week;
                 
-                // Add a space to the week title
                 const weekTitle = week.replace('Week', 'Week ');
                 weekDiv.innerHTML = `<h2>${weekTitle}</h2>`;
 
