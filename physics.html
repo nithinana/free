@@ -38,7 +38,7 @@
             <div class="flex justify-between items-center h-16">
                 <div class="flex items-center">
                     <i class="fa-solid fa-atom text-blue-600 text-2xl mr-3"></i>
-                    <h1 class="text-xl font-bold text-slate-900 tracking-tight">Physics Archive</h1>
+                    <h1 class="text-xl font-bold text-slate-900 tracking-tight">Physics</h1>
                 </div>
                 
                 <!-- Search Bar -->
@@ -59,8 +59,8 @@
     <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
         
         <div class="mb-8 text-center sm:text-left">
-            <h2 class="text-3xl font-bold text-slate-900 mb-2">Booklets</h2>
-            <p class="text-slate-600">booklets 1-15.</p>
+            <h2 class="text-3xl font-bold text-slate-900 mb-2"> Booklets</h2>
+            <p class="text-slate-600"> booklets 1-15.</p>
         </div>
 
         <!-- Mobile Search (Visible only on small screens) -->
@@ -83,7 +83,7 @@
             <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-slate-100 mb-4">
                 <i class="fa-solid fa-folder-open text-slate-400 text-2xl"></i>
             </div>
-            <h3 class="text-lg font-medium text-slate-900">No booklets found</h3>
+            <h3 class="text-lg font-medium text-slate-900">No booklets </h3>
             <p class="text-slate-500 mt-1">Try searching for a different number.</p>
         </div>
 
@@ -93,7 +93,7 @@
     <footer class="bg-white border-t border-slate-200 mt-auto">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
             <div class="text-center text-sm text-slate-500">
-                <p>&copy; Physics Revision Resources. All PDF links hosted externally.</p>
+                <p>&copy; Physics.</p>
             </div>
         </div>
     </footer>
@@ -113,21 +113,10 @@
                 </button>
             </div>
             
-            <!-- NEW: Tab Navigation for Mobile -->
-            <div id="modalTabs" class="flex md:hidden bg-white border-b border-slate-200">
-                <button id="qpTab" onclick="switchSplitViewTab('qp')" class="flex-1 py-3 px-1 text-sm font-medium border-b-2 border-transparent text-slate-500 hover:text-blue-600 transition-colors">
-                    Question Paper
-                </button>
-                <button id="msTab" onclick="switchSplitViewTab('ms')" class="flex-1 py-3 px-1 text-sm font-medium border-b-2 border-transparent text-slate-500 hover:text-green-600 transition-colors">
-                    Mark Scheme
-                </button>
-            </div>
-
             <!-- Modal Content (Iframes) -->
             <div class="flex-grow flex flex-col md:flex-row bg-slate-200 h-full overflow-hidden rounded-b-lg border-x border-b border-slate-200">
-                
                 <!-- Left Pane: QP -->
-                <div id="qpContainer" class="split-view-pane flex-1 flex flex-col h-full border-b md:border-b-0 md:border-r border-slate-300 relative">
+                <div class="flex-1 flex flex-col h-full border-b md:border-b-0 md:border-r border-slate-300 relative">
                     <div class="bg-blue-50 px-3 py-2 text-xs font-bold text-blue-700 border-b border-blue-100 flex justify-between items-center shadow-sm">
                         <span class="flex items-center gap-2"><i class="fa-regular fa-file-pdf"></i> Question Paper</span>
                         <a id="qpDownload" href="#" target="_blank" class="hover:text-blue-900 hover:underline">Open in New Tab</a>
@@ -136,7 +125,7 @@
                 </div>
 
                 <!-- Right Pane: MS -->
-                <div id="msContainer" class="split-view-pane flex-1 flex flex-col h-full relative hidden md:flex">
+                <div class="flex-1 flex flex-col h-full relative">
                     <div class="bg-green-50 px-3 py-2 text-xs font-bold text-green-700 border-b border-green-100 flex justify-between items-center shadow-sm">
                         <span class="flex items-center gap-2"><i class="fa-solid fa-check-double"></i> Mark Scheme</span>
                         <a id="msDownload" href="#" target="_blank" class="hover:text-green-900 hover:underline">Open in New Tab</a>
@@ -167,13 +156,6 @@
         const splitModalTitle = document.getElementById('splitModalTitle');
         const qpDownload = document.getElementById('qpDownload');
         const msDownload = document.getElementById('msDownload');
-        
-        // Tab Elements
-        const qpContainer = document.getElementById('qpContainer');
-        const msContainer = document.getElementById('msContainer');
-        const qpTab = document.getElementById('qpTab');
-        const msTab = document.getElementById('msTab');
-
 
         // Helper to create card HTML
         function createBookletCard(number) {
@@ -286,25 +268,6 @@
             }
         }
 
-        // Tab Switching Logic for Mobile
-        function switchSplitViewTab(tab) {
-            if (tab === 'qp') {
-                qpContainer.classList.remove('hidden');
-                msContainer.classList.add('hidden');
-                qpTab.classList.add('border-blue-500', 'text-blue-600');
-                qpTab.classList.remove('border-transparent', 'text-slate-500');
-                msTab.classList.remove('border-green-500', 'text-green-600');
-                msTab.classList.add('border-transparent', 'text-slate-500');
-            } else { // 'ms'
-                msContainer.classList.remove('hidden');
-                qpContainer.classList.add('hidden');
-                msTab.classList.add('border-green-500', 'text-green-600');
-                msTab.classList.remove('border-transparent', 'text-slate-500');
-                qpTab.classList.remove('border-blue-500', 'text-blue-600');
-                qpTab.classList.add('border-transparent', 'text-slate-500');
-            }
-        }
-
         // Split View Logic
         function openSplitView(number) {
             // Construct URLs using the new folder structure
@@ -323,9 +286,6 @@
             splitModalTitle.textContent = `Booklet ${number} - Split View`;
             splitModal.classList.remove('hidden');
             document.body.style.overflow = 'hidden'; // Prevent background scrolling
-
-            // Default to QP tab on open (relevant for mobile)
-            switchSplitViewTab('qp');
         }
 
         function closeSplitView() {
