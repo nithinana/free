@@ -37,6 +37,19 @@
             flex-grow: 1;
             overflow: hidden; /* Prevent main content overflow */
         }
+        /* Loading spinner */
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #4f46e5; /* indigo-600 */
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
     </style>
 </head>
 <body class="bg-gray-50 font-sans">
@@ -73,7 +86,7 @@
                         <svg class="w-12 h-12 text-indigo-500 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.402 9.495 5 8 5c-1.495 0-2.832.402-4 1.253V5a2 2 0 012-2h4a2 2 0 012 2v1.253zm0 0C13.168 5.402 14.505 5 16 5c1.495 0 2.832.402 4 1.253V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v1.253z"></path></svg>
                         <h3 class="text-2xl font-bold text-gray-800 mb-2">Ready to Study</h3>
                         <p class="text-gray-600">Select any booklet from the left panel to load it here, with the mark scheme appearing right next to it.</p>
-                        <p class="text-sm text-gray-400 mt-4">Note: The PDF links must be accessible at the specified paths (`/physics/...` and `/physicsms/...`) for the content to display.</p>
+                        <p class="text-sm text-gray-500 mt-4 font-semibold">Ensure your PDFs are available at: <br> <code class="bg-gray-200 p-1 rounded">/physics/Booklet (N).pdf</code> and <code class="bg-gray-200 p-1 rounded">/physicsms/Booklet (N) ms.pdf</code></p>
                     </div>
                 </div>
 
@@ -81,8 +94,8 @@
                 <div class="flex-1 bg-white rounded-xl shadow-lg overflow-hidden relative">
                     <h3 class="text-center font-semibold text-gray-600 bg-gray-200 py-1.5 absolute top-0 w-full z-10 text-sm">Booklet</h3>
                     <iframe id="booklet-viewer" src="about:blank" title="Booklet Viewer" class="pt-8"></iframe>
-                    <div id="booklet-placeholder" class="absolute inset-0 flex items-center justify-center bg-white/70 z-20 text-gray-400 text-sm p-4 text-center hidden">
-                        Booklet content will load here.
+                    <div id="booklet-placeholder" class="absolute inset-0 flex flex-col items-center justify-center bg-white/90 z-20 text-gray-500 text-sm p-4 text-center transition-opacity duration-300">
+                        <!-- Initial message or loading/error status -->
                     </div>
                 </div>
 
@@ -90,8 +103,8 @@
                 <div class="flex-1 bg-white rounded-xl shadow-lg overflow-hidden relative">
                     <h3 class="text-center font-semibold text-gray-600 bg-gray-200 py-1.5 absolute top-0 w-full z-10 text-sm">Mark Scheme</h3>
                     <iframe id="ms-viewer" src="about:blank" title="Mark Scheme Viewer" class="pt-8"></iframe>
-                    <div id="ms-placeholder" class="absolute inset-0 flex items-center justify-center bg-white/70 z-20 text-gray-400 text-sm p-4 text-center hidden">
-                        Mark Scheme content will load here.
+                    <div id="ms-placeholder" class="absolute inset-0 flex flex-col items-center justify-center bg-white/90 z-20 text-gray-500 text-sm p-4 text-center transition-opacity duration-300">
+                        <!-- Initial message or loading/error status -->
                     </div>
                 </div>
 
@@ -127,15 +140,20 @@
             const bookletPath = `/physics/Booklet (${number}).pdf`;
             const msPath = `/physicsms/Booklet (${number}) ms.pdf`;
             
-            // Update iframes
+            // 1. Show loading status in placeholders
+            const loadingHTML = '<div class="loader mb-3"></div> Loading document...';
+
+            bookletPlaceholder.innerHTML = loadingHTML;
+            msPlaceholder.innerHTML = loadingHTML;
+
+            bookletPlaceholder.classList.remove('hidden', 'bg-red-50');
+            msPlaceholder.classList.remove('hidden', 'bg-red-50');
+            
+            // 2. Update iframes source
             bookletViewer.src = bookletPath;
             msViewer.src = msPath;
 
-            // Update placeholders (optional: could be used for loading indicator)
-            bookletPlaceholder.classList.add('hidden');
-            msPlaceholder.classList.add('hidden');
-            
-            // Highlight the selected link
+            // 3. Highlight the selected link
             document.querySelectorAll('.booklet-link').forEach(link => {
                 link.classList.remove('bg-indigo-100', 'ring-2', 'ring-indigo-500');
             });
@@ -144,8 +162,44 @@
                 activeLink.classList.add('bg-indigo-100', 'ring-2', 'ring-indigo-500');
             }
             
-            // Display status message
-            showMessage(`Loading Booklet (${number}) and Mark Scheme... The display depends on your browser's ability to render PDFs in iframes and the correct file paths being set up.`);
+            // 4. Set up deferred check for load success/failure
+            const checkLoad = (iframe, placeholder, path) => {
+                // Wait briefly for the browser to attempt navigation
+                setTimeout(() => {
+                    // We check if the iframe is still showing 'about:blank' after setting the src.
+                    // If it is, or if contentDocument is null, it likely failed or was blocked.
+                    if (iframe.contentWindow.location.href === 'about:blank') {
+                        placeholder.classList.add('bg-red-50', 'text-red-700', 'border-red-300');
+                        placeholder.innerHTML = `
+                            <svg class="w-8 h-8 text-red-500 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            <span class="font-semibold mb-1">Failed to Load Document</span>
+                            Please ensure the file exists at this exact path:
+                            <code class="bg-red-100 text-red-800 p-0.5 rounded break-all mt-1 inline-block">${path}</code>
+                            (If the file exists, your browser might be blocking the load.)
+                        `;
+                    } else {
+                        // Document started loading (even if it's an error page from the server)
+                        // Wait for actual load event to hide the placeholder
+                    }
+                }, 200);
+            };
+
+            bookletViewer.onload = () => {
+                bookletPlaceholder.classList.add('hidden');
+                bookletPlaceholder.classList.remove('bg-red-50', 'text-red-700', 'border-red-300');
+            };
+
+            msViewer.onload = () => {
+                msPlaceholder.classList.add('hidden');
+                msPlaceholder.classList.remove('bg-red-50', 'text-red-700', 'border-red-300');
+            };
+            
+            checkLoad(bookletViewer, bookletPlaceholder, bookletPath);
+            checkLoad(msViewer, msPlaceholder, msPath);
+
+            // Display a general status message
+            messageBox.textContent = `Requested Booklet ${number}. Viewing PDF loading status in the panels.`;
+            messageBox.classList.remove('hidden');
         }
 
         /**
@@ -166,45 +220,19 @@
             }
         }
 
-        /**
-         * Displays a status message in the dedicated message box.
-         * @param {string} message The message to display.
-         */
-        function showMessage(message) {
-            messageBox.textContent = message;
-            messageBox.classList.remove('hidden');
-        }
-
         // Initialize the app on page load
         document.addEventListener('DOMContentLoaded', () => {
             generateBookletList();
             
-            // Add a friendly instruction
-            showMessage("Click a booklet above to load the PDF and Mark Scheme side-by-side.");
-            
             // Set up initial state of placeholders
-            bookletPlaceholder.textContent = 'Select a file to load Booklet PDF here.';
-            msPlaceholder.textContent = 'Select a file to load Mark Scheme PDF here.';
+            const initialPlaceholderText = '<span class="text-base font-medium">Select a file from the left to begin.</span><br>Documents will appear here.';
+            bookletPlaceholder.innerHTML = initialPlaceholderText;
+            msPlaceholder.innerHTML = initialPlaceholderText;
             bookletPlaceholder.classList.remove('hidden');
             msPlaceholder.classList.remove('hidden');
 
-            // Handle potential iframe loading issues (e.g., file not found) - often hard to catch in iframes, 
-            // but we can at least clean up the message.
-            bookletViewer.onload = () => {
-                 // Check if the viewer is still showing the blank page
-                if (bookletViewer.contentWindow.location.href === 'about:blank') {
-                    bookletPlaceholder.classList.remove('hidden');
-                } else {
-                    messageBox.classList.add('hidden');
-                }
-            };
-            msViewer.onload = () => {
-                if (msViewer.contentWindow.location.href === 'about:blank') {
-                    msPlaceholder.classList.remove('hidden');
-                } else {
-                    messageBox.classList.add('hidden');
-                }
-            };
+            // Hide the general status message initially since the welcome screen has the info.
+            messageBox.classList.add('hidden');
         });
     </script>
 </body>
