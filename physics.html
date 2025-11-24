@@ -139,7 +139,11 @@
     <!-- Scripts -->
     <script>
         const bookletCount = 15;
-        const baseUrl = "https://nithinana.github.io/free/physics/";
+        // Updated URL components based on new directory structure
+        const rootUrl = "https://nithinana.github.io/free/";
+        const qpFolder = "physics/"; // Question Papers location
+        const msFolder = "physicsms/"; // Mark Schemes location
+        
         const grid = document.getElementById('bookletGrid');
         const searchInput = document.getElementById('searchInput');
         const mobileSearchInput = document.getElementById('mobileSearchInput');
@@ -155,8 +159,9 @@
 
         // Helper to create card HTML
         function createBookletCard(number) {
-            const bookletUrl = `${baseUrl}Booklet%20${number}.pdf`;
-            const msUrl = `${baseUrl}Booklet%20${number}%20ms.pdf`;
+            // Construct URLs using the new folder structure
+            const bookletUrl = `${rootUrl}${qpFolder}Booklet%20${number}.pdf`;
+            const msUrl = `${rootUrl}${msFolder}Booklet%20${number}%20ms.pdf`;
 
             return `
                 <div class="booklet-card bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden transition-all duration-200 card-hover group" data-number="${number}">
@@ -265,8 +270,9 @@
 
         // Split View Logic
         function openSplitView(number) {
-            const bookletUrl = `${baseUrl}Booklet%20${number}.pdf`;
-            const msUrl = `${baseUrl}Booklet%20${number}%20ms.pdf`;
+            // Construct URLs using the new folder structure
+            const bookletUrl = `${rootUrl}${qpFolder}Booklet%20${number}.pdf`;
+            const msUrl = `${rootUrl}${msFolder}Booklet%20${number}%20ms.pdf`;
 
             // Set Iframes
             qpFrame.src = bookletUrl;
