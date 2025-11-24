@@ -98,6 +98,44 @@
         </div>
     </footer>
 
+    <!-- Split View Modal (Hidden by default) -->
+    <div id="splitModal" class="fixed inset-0 z-50 hidden bg-slate-900/95 backdrop-blur-sm transition-opacity duration-300">
+        <div class="flex flex-col h-full w-full p-2 sm:p-4">
+            <!-- Modal Header -->
+            <div class="flex justify-between items-center bg-white rounded-t-lg px-4 py-3 border-b border-slate-200 shadow-sm">
+                <div class="flex items-center overflow-hidden">
+                    <i class="fa-solid fa-columns text-purple-600 mr-3"></i>
+                    <h3 id="splitModalTitle" class="text-lg font-bold text-slate-800 truncate">Booklet Split View</h3>
+                </div>
+                <button onclick="closeSplitView()" class="ml-2 p-2 hover:bg-red-50 rounded-lg text-slate-500 hover:text-red-500 transition-colors flex items-center gap-2 flex-shrink-0">
+                    <span class="hidden sm:inline text-sm font-medium">Close</span>
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+            </div>
+            
+            <!-- Modal Content (Iframes) -->
+            <div class="flex-grow flex flex-col md:flex-row bg-slate-200 h-full overflow-hidden rounded-b-lg border-x border-b border-slate-200">
+                <!-- Left Pane: QP -->
+                <div class="flex-1 flex flex-col h-full border-b md:border-b-0 md:border-r border-slate-300 relative">
+                    <div class="bg-blue-50 px-3 py-2 text-xs font-bold text-blue-700 border-b border-blue-100 flex justify-between items-center shadow-sm">
+                        <span class="flex items-center gap-2"><i class="fa-regular fa-file-pdf"></i> Question Paper</span>
+                        <a id="qpDownload" href="#" target="_blank" class="hover:text-blue-900 hover:underline">Open in New Tab</a>
+                    </div>
+                    <iframe id="qpFrame" class="w-full h-full bg-white" src="about:blank"></iframe>
+                </div>
+
+                <!-- Right Pane: MS -->
+                <div class="flex-1 flex flex-col h-full relative">
+                    <div class="bg-green-50 px-3 py-2 text-xs font-bold text-green-700 border-b border-green-100 flex justify-between items-center shadow-sm">
+                        <span class="flex items-center gap-2"><i class="fa-solid fa-check-double"></i> Mark Scheme</span>
+                        <a id="msDownload" href="#" target="_blank" class="hover:text-green-900 hover:underline">Open in New Tab</a>
+                    </div>
+                    <iframe id="msFrame" class="w-full h-full bg-white" src="about:blank"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Scripts -->
     <script>
         const bookletCount = 15;
@@ -106,14 +144,17 @@
         const searchInput = document.getElementById('searchInput');
         const mobileSearchInput = document.getElementById('mobileSearchInput');
         const noResults = document.getElementById('noResults');
+        
+        // Modal Elements
+        const splitModal = document.getElementById('splitModal');
+        const qpFrame = document.getElementById('qpFrame');
+        const msFrame = document.getElementById('msFrame');
+        const splitModalTitle = document.getElementById('splitModalTitle');
+        const qpDownload = document.getElementById('qpDownload');
+        const msDownload = document.getElementById('msDownload');
 
         // Helper to create card HTML
         function createBookletCard(number) {
-            const paddedNum = number.toString(); // Keeps it simple "1", "12" etc.
-            
-            // Construct URLs based on the user's specific pattern
-            // Pattern: Booklet%20X.pdf
-            // Pattern: Booklet%20X%20ms.pdf
             const bookletUrl = `${baseUrl}Booklet%20${number}.pdf`;
             const msUrl = `${baseUrl}Booklet%20${number}%20ms.pdf`;
 
@@ -167,6 +208,20 @@
                             <i class="fa-solid fa-arrow-up-right-from-square text-xs text-slate-300 group-hover/btn:text-green-500"></i>
                         </a>
 
+                        <!-- Split View Button (New) -->
+                        <button onclick="openSplitView(${number})" class="flex items-center justify-between w-full p-3 rounded-lg border border-slate-200 hover:border-purple-400 hover:bg-purple-50 transition-all group/btn">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 group-hover/btn:bg-white group-hover/btn:text-purple-600 transition-colors">
+                                    <i class="fa-solid fa-columns text-sm"></i>
+                                </div>
+                                <div class="flex flex-col text-left">
+                                    <span class="text-sm font-semibold text-slate-700">Split View</span>
+                                    <span class="text-xs text-slate-400">Side-by-Side</span>
+                                </div>
+                            </div>
+                            <i class="fa-solid fa-expand text-xs text-slate-300 group-hover/btn:text-purple-500"></i>
+                        </button>
+
                     </div>
                 </div>
             `;
@@ -208,9 +263,42 @@
             }
         }
 
+        // Split View Logic
+        function openSplitView(number) {
+            const bookletUrl = `${baseUrl}Booklet%20${number}.pdf`;
+            const msUrl = `${baseUrl}Booklet%20${number}%20ms.pdf`;
+
+            // Set Iframes
+            qpFrame.src = bookletUrl;
+            msFrame.src = msUrl;
+            
+            // Set Direct Links (Fallbacks)
+            qpDownload.href = bookletUrl;
+            msDownload.href = msUrl;
+            
+            // UI Updates
+            splitModalTitle.textContent = `Booklet ${number} - Split View`;
+            splitModal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden'; // Prevent background scrolling
+        }
+
+        function closeSplitView() {
+            splitModal.classList.add('hidden');
+            qpFrame.src = 'about:blank'; // Clear src to stop loading/playing
+            msFrame.src = 'about:blank';
+            document.body.style.overflow = ''; // Restore scrolling
+        }
+
         // Event Listeners
         searchInput.addEventListener('input', (e) => filterGrid(e.target.value));
         mobileSearchInput.addEventListener('input', (e) => filterGrid(e.target.value));
+        
+        // Close modal on Escape key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === "Escape") {
+                closeSplitView();
+            }
+        });
 
         // Run on load
         init();
