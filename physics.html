@@ -1,1 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Physics Booklet & Mark Scheme Organizer</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom scrollbar styling for a cleaner look */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 8px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background-color: #9ca3af; /* gray-400 */
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f3f4f6; /* gray-100 */
+        }
+        /* Iframe styling for better integration */
+        iframe {
+            border: none;
+            width: 100%;
+            height: 100%;
+        }
+        /* Fix for mobile/desktop layout heights */
+        html, body {
+            height: 100%;
+        }
+        #app-container {
+            height: 100vh; /* Full viewport height */
+            display: flex;
+            flex-direction: column;
+        }
+        #main-content {
+            flex-grow: 1;
+            overflow: hidden; /* Prevent main content overflow */
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans">
 
+    <div id="app-container">
+
+        <!-- Header -->
+        <header class="bg-indigo-700 text-white shadow-lg p-4">
+            <h1 class="text-2xl font-bold tracking-tight">Physics Resource Hub</h1>
+            <p class="text-indigo-200 text-sm">Select a booklet below to view it alongside its mark scheme.</p>
+        </header>
+
+        <!-- Main Content Area (Navigation + Viewer) -->
+        <div id="main-content" class="md:flex">
+            
+            <!-- Navigation/Selector Panel -->
+            <div id="nav-panel" class="w-full md:w-80 bg-white p-4 overflow-y-auto custom-scrollbar shadow-xl flex-shrink-0">
+                <h2 class="text-xl font-semibold mb-3 text-gray-700 border-b pb-2">Booklets (1-15)</h2>
+                <div id="booklet-list" class="space-y-2">
+                    <!-- Links will be generated here by JavaScript -->
+                </div>
+                
+                <div id="message-box" class="mt-4 p-3 bg-blue-50 border border-blue-200 text-blue-800 text-sm rounded-lg hidden">
+                    <!-- Status/Error messages appear here -->
+                </div>
+            </div>
+
+            <!-- Viewer Panel (Side-by-Side iframes) -->
+            <div id="viewer-panel" class="flex-1 p-2 md:p-4 bg-gray-100 flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-4 overflow-hidden">
+                
+                <!-- Initial Welcome Screen -->
+                <div id="welcome-screen" class="absolute inset-0 flex items-center justify-center p-8 z-10 bg-gray-100/90 transition-opacity duration-300">
+                    <div class="text-center p-6 bg-white rounded-xl shadow-2xl max-w-lg">
+                        <svg class="w-12 h-12 text-indigo-500 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.402 9.495 5 8 5c-1.495 0-2.832.402-4 1.253V5a2 2 0 012-2h4a2 2 0 012 2v1.253zm0 0C13.168 5.402 14.505 5 16 5c1.495 0 2.832.402 4 1.253V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v1.253z"></path></svg>
+                        <h3 class="text-2xl font-bold text-gray-800 mb-2">Ready to Study</h3>
+                        <p class="text-gray-600">Select any booklet from the left panel to load it here, with the mark scheme appearing right next to it.</p>
+                        <p class="text-sm text-gray-400 mt-4">Note: The PDF links must be accessible at the specified paths (`/physics/...` and `/physicsms/...`) for the content to display.</p>
+                    </div>
+                </div>
+
+                <!-- Iframe for Booklet -->
+                <div class="flex-1 bg-white rounded-xl shadow-lg overflow-hidden relative">
+                    <h3 class="text-center font-semibold text-gray-600 bg-gray-200 py-1.5 absolute top-0 w-full z-10 text-sm">Booklet</h3>
+                    <iframe id="booklet-viewer" src="about:blank" title="Booklet Viewer" class="pt-8"></iframe>
+                    <div id="booklet-placeholder" class="absolute inset-0 flex items-center justify-center bg-white/70 z-20 text-gray-400 text-sm p-4 text-center hidden">
+                        Booklet content will load here.
+                    </div>
+                </div>
+
+                <!-- Iframe for Mark Scheme -->
+                <div class="flex-1 bg-white rounded-xl shadow-lg overflow-hidden relative">
+                    <h3 class="text-center font-semibold text-gray-600 bg-gray-200 py-1.5 absolute top-0 w-full z-10 text-sm">Mark Scheme</h3>
+                    <iframe id="ms-viewer" src="about:blank" title="Mark Scheme Viewer" class="pt-8"></iframe>
+                    <div id="ms-placeholder" class="absolute inset-0 flex items-center justify-center bg-white/70 z-20 text-gray-400 text-sm p-4 text-center hidden">
+                        Mark Scheme content will load here.
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <script>
+        const BOOKLET_COUNT = 15;
+        const bookletList = document.getElementById('booklet-list');
+        const bookletViewer = document.getElementById('booklet-viewer');
+        const msViewer = document.getElementById('ms-viewer');
+        const welcomeScreen = document.getElementById('welcome-screen');
+        const messageBox = document.getElementById('message-box');
+        
+        const bookletPlaceholder = document.getElementById('booklet-placeholder');
+        const msPlaceholder = document.getElementById('ms-placeholder');
+
+
+        /**
+         * Loads the selected booklet and mark scheme into the respective iframes.
+         * @param {number} number The booklet number (1 to 15).
+         */
+        function loadFiles(number) {
+            
+            // Hide welcome screen
+            welcomeScreen.classList.add('opacity-0');
+            setTimeout(() => welcomeScreen.classList.add('hidden'), 300);
+
+            // Construct file paths based on the requested structure
+            const bookletPath = `/physics/Booklet (${number}).pdf`;
+            const msPath = `/physicsms/Booklet (${number}) ms.pdf`;
+            
+            // Update iframes
+            bookletViewer.src = bookletPath;
+            msViewer.src = msPath;
+
+            // Update placeholders (optional: could be used for loading indicator)
+            bookletPlaceholder.classList.add('hidden');
+            msPlaceholder.classList.add('hidden');
+            
+            // Highlight the selected link
+            document.querySelectorAll('.booklet-link').forEach(link => {
+                link.classList.remove('bg-indigo-100', 'ring-2', 'ring-indigo-500');
+            });
+            const activeLink = document.getElementById(`link-${number}`);
+            if (activeLink) {
+                activeLink.classList.add('bg-indigo-100', 'ring-2', 'ring-indigo-500');
+            }
+            
+            // Display status message
+            showMessage(`Loading Booklet (${number}) and Mark Scheme... The display depends on your browser's ability to render PDFs in iframes and the correct file paths being set up.`);
+        }
+
+        /**
+         * Generates the list of booklet links.
+         */
+        function generateBookletList() {
+            for (let i = 1; i <= BOOKLET_COUNT; i++) {
+                const button = document.createElement('button');
+                button.id = `link-${i}`;
+                button.className = 'booklet-link w-full text-left p-3 bg-gray-50 hover:bg-indigo-50 rounded-lg transition duration-150 ease-in-out shadow-sm border border-gray-200 text-gray-700';
+                button.innerHTML = `
+                    <div class="font-medium">Booklet ${i}</div>
+                    <div class="text-xs text-gray-500">Includes Mark Scheme (MS)</div>
+                `;
+                button.setAttribute('aria-label', `Load Booklet ${i} and Mark Scheme`);
+                button.onclick = () => loadFiles(i);
+                bookletList.appendChild(button);
+            }
+        }
+
+        /**
+         * Displays a status message in the dedicated message box.
+         * @param {string} message The message to display.
+         */
+        function showMessage(message) {
+            messageBox.textContent = message;
+            messageBox.classList.remove('hidden');
+        }
+
+        // Initialize the app on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            generateBookletList();
+            
+            // Add a friendly instruction
+            showMessage("Click a booklet above to load the PDF and Mark Scheme side-by-side.");
+            
+            // Set up initial state of placeholders
+            bookletPlaceholder.textContent = 'Select a file to load Booklet PDF here.';
+            msPlaceholder.textContent = 'Select a file to load Mark Scheme PDF here.';
+            bookletPlaceholder.classList.remove('hidden');
+            msPlaceholder.classList.remove('hidden');
+
+            // Handle potential iframe loading issues (e.g., file not found) - often hard to catch in iframes, 
+            // but we can at least clean up the message.
+            bookletViewer.onload = () => {
+                 // Check if the viewer is still showing the blank page
+                if (bookletViewer.contentWindow.location.href === 'about:blank') {
+                    bookletPlaceholder.classList.remove('hidden');
+                } else {
+                    messageBox.classList.add('hidden');
+                }
+            };
+            msViewer.onload = () => {
+                if (msViewer.contentWindow.location.href === 'about:blank') {
+                    msPlaceholder.classList.remove('hidden');
+                } else {
+                    messageBox.classList.add('hidden');
+                }
+            };
+        });
+    </script>
+</body>
+</html>
