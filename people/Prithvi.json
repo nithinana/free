@@ -1,0 +1,140 @@
+{
+    "name": "Prithvi",
+    "selections": [
+        {
+            "day": "Week 1 - Monday",
+            "period": "P2",
+            "status": "Supervised Study"
+        },
+        {
+            "day": "Week 1 - Monday",
+            "period": "P3",
+            "status": "Free"
+        },
+        {
+            "day": "Week 1 - Monday",
+            "period": "P4",
+            "status": "Free"
+        },
+        {
+            "day": "Week 1 - Monday",
+            "period": "P5",
+            "status": "Free"
+        },
+        {
+            "day": "Week 1 - Tuesday",
+            "period": "P5",
+            "status": "Supervised Study"
+        },
+        {
+            "day": "Week 1 - Wednesday",
+            "period": "P4",
+            "status": "Free"
+        },
+        {
+            "day": "Week 1 - Wednesday",
+            "period": "P5",
+            "status": "Free"
+        },
+        {
+            "day": "Week 1 - Wednesday",
+            "period": "P6",
+            "status": "Free"
+        },
+        {
+            "day": "Week 1 - Thursday",
+            "period": "P4",
+            "status": "Supervised Study"
+        },
+        {
+            "day": "Week 1 - Thursday",
+            "period": "P5",
+            "status": "Free"
+        },
+        {
+            "day": "Week 1 - Friday",
+            "period": "P2",
+            "status": "Free"
+        },
+        {
+            "day": "Week 1 - Friday",
+            "period": "P5",
+            "status": "Free"
+        },
+        {
+            "day": "Week 1 - Friday",
+            "period": "P6",
+            "status": "Free"
+        },
+        {
+            "day": "Week 2 - Monday",
+            "period": "P3",
+            "status": "Free"
+        },
+        {
+            "day": "Week 2 - Monday",
+            "period": "P4",
+            "status": "Free"
+        },
+        {
+            "day": "Week 2 - Monday",
+            "period": "P5",
+            "status": "Free"
+        },
+        {
+            "day": "Week 2 - Tuesday",
+            "period": "P4",
+            "status": "Assessment"
+        },
+        {
+            "day": "Week 2 - Tuesday",
+            "period": "P5",
+            "status": "Free"
+        },
+        {
+            "day": "Week 2 - Wednesday",
+            "period": "P4",
+            "status": "Assessment"
+        },
+        {
+            "day": "Week 2 - Wednesday",
+            "period": "P5",
+            "status": "Free"
+        },
+        {
+            "day": "Week 2 - Wednesday",
+            "period": "P6",
+            "status": "Free"
+        },
+        {
+            "day": "Week 2 - Thursday",
+            "period": "P2",
+            "status": "Assessment"
+        },
+        {
+            "day": "Week 2 - Thursday",
+            "period": "P3",
+            "status": "Free"
+        },
+        {
+            "day": "Week 2 - Thursday",
+            "period": "P4",
+            "status": "Free"
+        },
+        {
+            "day": "Week 2 - Friday",
+            "period": "P2",
+            "status": "Free"
+        },
+        {
+            "day": "Week 2 - Friday",
+            "period": "P3",
+            "status": "Free"
+        },
+        {
+            "day": "Week 2 - Friday",
+            "period": "P6",
+            "status": "Free"
+        }
+    ]
+}
