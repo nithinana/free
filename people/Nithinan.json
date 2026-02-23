@@ -3,11 +3,6 @@
     "selections": [
         {
             "day": "Week 1 - Monday",
-            "period": "P1",
-            "status": "Free"
-        },
-        {
-            "day": "Week 1 - Monday",
             "period": "P2",
             "status": "Free"
         },
@@ -52,11 +47,6 @@
             "status": "Free"
         },
         {
-            "day": "Week 1 - Thursday",
-            "period": "P5",
-            "status": "Free"
-        },
-        {
             "day": "Week 1 - Friday",
             "period": "P1",
             "status": "Supervised Study"
@@ -69,11 +59,6 @@
         {
             "day": "Week 2 - Monday",
             "period": "P1",
-            "status": "Free"
-        },
-        {
-            "day": "Week 2 - Monday",
-            "period": "P5",
             "status": "Free"
         },
         {
@@ -95,11 +80,6 @@
             "day": "Week 2 - Wednesday",
             "period": "P1",
             "status": "Assessment"
-        },
-        {
-            "day": "Week 2 - Wednesday",
-            "period": "P2",
-            "status": "Free"
         },
         {
             "day": "Week 2 - Wednesday",
