@@ -83,6 +83,11 @@
         },
         {
             "day": "Week 2 - Wednesday",
+            "period": "P2",
+            "status": "Free"
+        },
+        {
+            "day": "Week 2 - Wednesday",
             "period": "P5",
             "status": "Free"
         },
