@@ -3,18 +3,8 @@
     "selections": [
         {
             "day": "Week 1 - Monday",
-            "period": "P1",
-            "status": "Free"
-        },
-        {
-            "day": "Week 1 - Monday",
-            "period": "P2",
+            "period": "P4",
             "status": "Supervised Study"
-        },
-        {
-            "day": "Week 1 - Monday",
-            "period": "P3",
-            "status": "Free"
         },
         {
             "day": "Week 1 - Monday",
@@ -23,7 +13,17 @@
         },
         {
             "day": "Week 1 - Tuesday",
+            "period": "P3",
+            "status": "Free"
+        },
+        {
+            "day": "Week 1 - Tuesday",
             "period": "P5",
+            "status": "Free"
+        },
+        {
+            "day": "Week 1 - Wednesday",
+            "period": "P1",
             "status": "Supervised Study"
         },
         {
@@ -48,17 +48,17 @@
         },
         {
             "day": "Week 1 - Thursday",
-            "period": "P4",
+            "period": "P2",
             "status": "Supervised Study"
         },
         {
-            "day": "Week 1 - Friday",
-            "period": "P1",
+            "day": "Week 1 - Thursday",
+            "period": "P3",
             "status": "Free"
         },
         {
             "day": "Week 1 - Friday",
-            "period": "P2",
+            "period": "P1",
             "status": "Free"
         },
         {
@@ -73,6 +73,11 @@
         },
         {
             "day": "Week 2 - Monday",
+            "period": "P1",
+            "status": "Free"
+        },
+        {
+            "day": "Week 2 - Monday",
             "period": "P3",
             "status": "Free"
         },
@@ -82,8 +87,8 @@
             "status": "Free"
         },
         {
-            "day": "Week 2 - Tuesday",
-            "period": "P3",
+            "day": "Week 2 - Monday",
+            "period": "P6",
             "status": "Free"
         },
         {
@@ -93,7 +98,12 @@
         },
         {
             "day": "Week 2 - Tuesday",
-            "period": "P5",
+            "period": "P6",
+            "status": "Free"
+        },
+        {
+            "day": "Week 2 - Wednesday",
+            "period": "P2",
             "status": "Free"
         },
         {
@@ -118,7 +128,12 @@
         },
         {
             "day": "Week 2 - Thursday",
-            "period": "P4",
+            "period": "P6",
+            "status": "Free"
+        },
+        {
+            "day": "Week 2 - Friday",
+            "period": "P1",
             "status": "Free"
         },
         {

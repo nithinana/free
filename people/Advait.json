@@ -1,24 +1,29 @@
 {
-    "name": "Advait",
+    "name": "advait",
     "selections": [
         {
             "day": "Week 1 - Monday",
-            "period": "P1",
-            "status": "Free"
-        },
-        {
-            "day": "Week 1 - Monday",
-            "period": "P2",
+            "period": "P3",
             "status": "Free"
         },
         {
             "day": "Week 1 - Monday",
             "period": "P4",
+            "status": "Free"
+        },
+        {
+            "day": "Week 1 - Monday",
+            "period": "P5",
+            "status": "Free"
+        },
+        {
+            "day": "Week 1 - Tuesday",
+            "period": "P1",
             "status": "Supervised Study"
         },
         {
             "day": "Week 1 - Tuesday",
-            "period": "P2",
+            "period": "P5",
             "status": "Free"
         },
         {
@@ -28,13 +33,8 @@
         },
         {
             "day": "Week 1 - Wednesday",
-            "period": "P1",
-            "status": "Free"
-        },
-        {
-            "day": "Week 1 - Wednesday",
-            "period": "P3",
-            "status": "Free"
+            "period": "P2",
+            "status": "Supervised Study"
         },
         {
             "day": "Week 1 - Wednesday",
@@ -53,32 +53,47 @@
         },
         {
             "day": "Week 1 - Thursday",
-            "period": "P1",
-            "status": "Supervised Study"
+            "period": "P2",
+            "status": "Free"
         },
         {
             "day": "Week 1 - Thursday",
-            "period": "P5",
+            "period": "P3",
             "status": "Free"
         },
         {
-            "day": "Week 1 - Friday",
-            "period": "P1",
-            "status": "Free"
-        },
-        {
-            "day": "Week 1 - Friday",
+            "day": "Week 1 - Thursday",
             "period": "P4",
+            "status": "Free"
+        },
+        {
+            "day": "Week 1 - Thursday",
+            "period": "P6",
+            "status": "Free"
+        },
+        {
+            "day": "Week 1 - Friday",
+            "period": "P2",
             "status": "Supervised Study"
         },
         {
+            "day": "Week 1 - Friday",
+            "period": "P3",
+            "status": "Free"
+        },
+        {
+            "day": "Week 2 - Monday",
+            "period": "P1",
+            "status": "Free"
+        },
+        {
             "day": "Week 2 - Monday",
             "period": "P2",
             "status": "Free"
         },
         {
             "day": "Week 2 - Monday",
-            "period": "P5",
+            "period": "P4",
             "status": "Free"
         },
         {
@@ -98,11 +113,6 @@
         },
         {
             "day": "Week 2 - Wednesday",
-            "period": "P1",
-            "status": "Free"
-        },
-        {
-            "day": "Week 2 - Wednesday",
             "period": "P3",
             "status": "Assessment"
         },
@@ -118,22 +128,27 @@
         },
         {
             "day": "Week 2 - Thursday",
-            "period": "P2",
-            "status": "Free"
-        },
-        {
-            "day": "Week 2 - Thursday",
             "period": "P3",
             "status": "Assessment"
         },
         {
             "day": "Week 2 - Thursday",
-            "period": "P6",
+            "period": "P4",
             "status": "Free"
         },
         {
             "day": "Week 2 - Friday",
-            "period": "P1",
+            "period": "P2",
+            "status": "Free"
+        },
+        {
+            "day": "Week 2 - Friday",
+            "period": "P3",
+            "status": "Free"
+        },
+        {
+            "day": "Week 2 - Friday",
+            "period": "P6",
             "status": "Free"
         }
     ]
